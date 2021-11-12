@@ -1,0 +1,9 @@
+<Project>
+  <Panel>
+    <Label Text="Sugarscape" HorizontalAlignment="Center" />
+  <VerticalMenu LabelHorizontalAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+     <MenuItem Text="Start Random" /><MenuItem Text="Menu Editor" />
+      <MenuItem Text="Load Map" />
+  </VerticalMenu>
+  </Panel>
+</Project>
