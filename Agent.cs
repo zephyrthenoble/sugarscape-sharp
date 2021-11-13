@@ -14,6 +14,7 @@ namespace sugarscape
     {
         private int vision;
         private int stores;
+        private Point rsize;
         private int metabolism;
         public Point gridposition;
         public Vector2 worldposition;
@@ -32,6 +33,8 @@ namespace sugarscape
             this.vision = vision;
             this.metabolism = metabolism;
             this.stores = stores;
+            var wsize = World.squaresize.X - offset.X * 2;
+            rsize = new Point(wsize, wsize);
 
         }
         public void Update(GameTime g)
@@ -110,8 +113,8 @@ namespace sugarscape
         internal void Draw(SpriteBatch g, GameTime gameTime, Point size)
         {
             //g.Draw(World.whiteRectangle, new Rectangle(gridposition * World.squaresize + offset, World.squaresize - offset - offset), color);
-            var rsize = World.squaresize.X - offset.X * 2;
-            g.Draw(World.whiteRectangle, new Rectangle(worldposition.ToPoint(), new Point(rsize, rsize)), color);
+            
+            g.Draw(World.whiteRectangle, new Rectangle(worldposition.ToPoint(), rsize), color);
 
             //p.DrawSolidRectangle(worldposition, rsize, rsize, color);
             /*Point current_pos_real = gridposition * World.squaresize + new Point(World.squaresize.X / 2, World.squaresize.Y / 2);
