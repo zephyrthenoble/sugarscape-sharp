@@ -34,10 +34,10 @@ namespace sugarscape
             whiteRectangle = new Texture2D(g, 1, 1);
             whiteRectangle.SetData(new[] { Color.White });
             sugarcolors.Add(0, Color.White);
-            sugarcolors.Add(1, Color.LightGoldenrodYellow);
-            sugarcolors.Add(2, Color.Goldenrod);
-            sugarcolors.Add(3, Color.DarkGoldenrod);
-            sugarcolors.Add(4, Color.Chocolate);
+            sugarcolors.Add(1, Color.LightGoldenrodYellow); //R:250 G:250 B:210
+            sugarcolors.Add(2, Color.Goldenrod); // {R:218 G:165 B:32 A:255}
+            sugarcolors.Add(3, Color.DarkGoldenrod); //{R:184 G:134 B:11 A:255}
+            sugarcolors.Add(4, Color.Chocolate); // { R: 210 G: 105 B: 30 A: 255}
         }
         public void Draw(SpriteBatch g, GameTime gameTime)
         {

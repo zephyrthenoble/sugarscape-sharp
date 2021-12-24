@@ -22,7 +22,7 @@ namespace sugarscape
         //UPS
         public float UpdateRate = 1.0f;
 
-        //private SpriteFont font;
+        public static SpriteFont font;
 
 
 
@@ -51,7 +51,7 @@ namespace sugarscape
         {
             World.Instance.Init(GraphicsDevice, new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 
-            World.Instance.GenerateGrid(20, 20);
+            World.Instance.GenerateGrid(5, 5);
             
             base.Initialize();
         }
@@ -60,7 +60,7 @@ namespace sugarscape
         {
             Debug.WriteLine("Load");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            //font = Content.Load<SpriteFont>("Menu"); // Use the name of your sprite font file here instead of 'Score'.
+            font = Content.Load<SpriteFont>("Menu"); // Use the name of your sprite font file here instead of 'Score'.
 
         }
 
@@ -129,5 +129,7 @@ namespace sugarscape
         {
             return new Vector2(p.X, p.Y);
         }
+
+
     }
 }

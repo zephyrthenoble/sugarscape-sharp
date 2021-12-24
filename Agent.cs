@@ -23,6 +23,7 @@ namespace sugarscape
         private readonly Tweener _tweener = new Tweener();
         public bool moving = false;
         public Point offset = new Point(4, 4);
+        public Point best = new Point(0, 0);
 
         public Agent(Point pos, int vision = 3, int metabolism = 1, int stores = 5)
         {
@@ -45,7 +46,7 @@ namespace sugarscape
         {
             var random = new Random();
             List<Point> possible = Look();
-            Point best = possible[random.Next(possible.Count)];
+            best = possible[random.Next(possible.Count)];
             Move(best);
             Eat();
         }
@@ -55,7 +56,12 @@ namespace sugarscape
             gridposition = p;
 
             Vector2 newpoint = GridToPixel(p) + offset.ToVector2();
-            _tweener.TweenTo(target: this, expression: player => this.worldposition, toValue: newpoint, duration: .5f, delay: 0).Easing(EasingFunctions.CubicInOut); ;
+            _tweener.TweenTo(target: this, 
+                expression: player => this.worldposition, 
+                toValue: newpoint, 
+                duration: .5f, 
+                delay: 0)
+                .Easing(EasingFunctions.CubicInOut); 
             moving = true;
         }
         public void Eat()
@@ -115,6 +121,7 @@ namespace sugarscape
             //g.Draw(World.whiteRectangle, new Rectangle(gridposition * World.squaresize + offset, World.squaresize - offset - offset), color);
             
             g.Draw(World.whiteRectangle, new Rectangle(worldposition.ToPoint(), rsize), color);
+            g.DrawString(GameDriver.font, best.ToString(), worldposition, Color.Black);
 
             //p.DrawSolidRectangle(worldposition, rsize, rsize, color);
             /*Point current_pos_real = gridposition * World.squaresize + new Point(World.squaresize.X / 2, World.squaresize.Y / 2);
