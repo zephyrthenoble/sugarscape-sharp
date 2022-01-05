@@ -21,9 +21,11 @@ namespace sugarscape
 
         //UPS
         public float UpdateRate = 1.0f;
+        public float MoveRate = 0.5f;
 
         public static SpriteFont font;
-
+        private bool Pause = true;
+        Keys lastpressed = Keys.None;
 
 
         public GameDriver()
@@ -50,9 +52,7 @@ namespace sugarscape
         protected override void Initialize()
         {
             World.Instance.Init(GraphicsDevice, new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
-
-            World.Instance.GenerateGrid(5, 5);
-            
+            World.Instance.GenerateGrid(10,10);
             base.Initialize();
         }
 
@@ -61,62 +61,64 @@ namespace sugarscape
             Debug.WriteLine("Load");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Menu"); // Use the name of your sprite font file here instead of 'Score'.
-
         }
 
         protected override void Update(GameTime gameTime)
         {
-            
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _timeSinceUpdate += gameTime.ElapsedGameTime.TotalSeconds;
-            while (_timeSinceUpdate > 1f / UpdateRate)
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                _timeSinceUpdate -= 1f / UpdateRate;
+                if (lastpressed == Keys.None)
+                    if (Pause == true)
+                        Pause = false;
+                    else
+                        Pause = true;
+                lastpressed = Keys.Space;
+            }
+            else
+                lastpressed = Keys.None;
 
-                Debug.WriteLine(gameTime.TotalGameTime);
+            if (Pause == false)
+            {
+                _timeSinceUpdate += gameTime.ElapsedGameTime.TotalSeconds;
+                while (_timeSinceUpdate > 1f / UpdateRate)
+                {
+                    _timeSinceUpdate -= 1f / UpdateRate;
+
+                    Debug.WriteLine(gameTime.TotalGameTime);
+                    foreach (Agent a in World.Instance.agents)
+                        if (a != null)
+                            a.Activate();
+
+                    foreach (Sugar s in World.Instance.fields)
+                        if (s != null)
+                            s.Grow();
+                }
+
                 foreach (Agent a in World.Instance.agents)
-                {
                     if (a != null)
-                    {
-                        a.Activate();
-                    }
-                }
+                        a.Update(gameTime);
+
                 foreach (Sugar s in World.Instance.fields)
-                {
                     if (s != null)
-                    {
-                        s.Grow();
-                    }
-                }
-            }
-            foreach (Agent a in World.Instance.agents)
-            {
-                if (a != null)
-                {
-                    a.Update(gameTime);
-                }
-            }
-            foreach (Sugar s in World.Instance.fields)
-            {
-                if (s != null)
-                {
-                    s.Update(gameTime);
-                }
+                        s.Update(gameTime);
+
             }
 
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
             _spriteBatch.Begin();
 
-            World.Instance.Draw(_spriteBatch,  gameTime);
+            World.Instance.Draw(_spriteBatch, gameTime);
 
             _spriteBatch.End();
 

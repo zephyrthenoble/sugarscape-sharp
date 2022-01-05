@@ -75,41 +75,51 @@ namespace sugarscape
     public class Sugar
     {
         public int yield;
-        private int max;
+        public int max;
         private int growth_rate;
         private int growth_cycle = 0;
+        public int times_harvested = 0;
         private bool harvasted = false;
+        public bool checked_ = false;
         public bool tweening = false;
+        public bool spawn = false;
         public ColorWrapper color = new ColorWrapper(Color.White);
 
         public Sugar(int max = 4, int start = 0, int growth_rate = 3)
         {
             yield = start;
             color = new ColorWrapper(World.sugarcolors[yield]);
-            var target_yield = MathHelper.Clamp(yield + 1, 0, max);
-            Tween(target_yield);
+            // var target_yield = MathHelper.Clamp(yield + 1, 0, max);
+            Tween(yield);
             this.max = max;
             this.growth_rate = growth_rate;
         }
+        public void validateSugar()
+        {
+
+        }
         public int Harvest()
         {
-            int x = yield;
+            int harvestvalue = yield;
             yield = 0;
             growth_cycle = 0;
             harvasted = true;
-            color.Whiteout(); 
+            checked_ = false;
+            times_harvested += 1;
+            color.Whiteout();
 
-            return x;
+            return harvestvalue;
         }
         public void Tween(int target_yield)
         {
             color.TweenTo(World.sugarcolors[target_yield]);
         }
         public void Grow()
-        { 
+        {
             if (harvasted == true)
             {
                 harvasted = false;
+                checked_ = false;
                 return;
             }
 
@@ -118,11 +128,8 @@ namespace sugarscape
             {
                 yield += 1;
                 yield = MathHelper.Clamp(yield, 0, max);
-                var target_yield = MathHelper.Clamp(yield + 1, 0, max);
-                if (target_yield > yield)
-                {
-                    Tween(target_yield);
-                }
+                //var target_yield = MathHelper.Clamp(yield + 1, 0, max);
+                Tween(yield);
 
                 growth_cycle = 0;
             }
@@ -135,12 +142,16 @@ namespace sugarscape
             g.Draw(World.whiteRectangle, destinationrec, color);
             g.DrawString(GameDriver.font, yield.ToString() + "/" + max.ToString(), worldpos.ToVector2(), Color.Black);
             g.DrawString(GameDriver.font, growth_cycle.ToString(), worldpos.ToVector2() + new Vector2(0, 16), Color.Black);
+            g.DrawString(GameDriver.font, "harvest: " + times_harvested.ToString(), worldpos.ToVector2() + new Vector2(0, 32), Color.Black);
+            g.DrawString(GameDriver.font, "checked: " + checked_.ToString(), worldpos.ToVector2() + new Vector2(0, 48), Color.Black);
+            g.DrawString(GameDriver.font, "spawn: " + spawn.ToString(), worldpos.ToVector2() + new Vector2(0, 64), Color.Black);
+
 
         }
 
         public void Update(GameTime gameTime)
         {
             color.Update(gameTime);
-        }
+                    }
     }
 }

@@ -19,6 +19,7 @@ namespace sugarscape
         public static Dictionary<int, Color> sugarcolors = new Dictionary<int, Color>();
         public static Point squaresize;
         public static Point screensize;
+        public static Random r = new Random();
 
 
         World()
@@ -43,32 +44,25 @@ namespace sugarscape
         {
             Point size = new Point(20, 20);
             for (int i = 0; i < worldwidth; i++)
-            {
                 for (int j = 0; j < worldlength; j++)
-                {
                     if (fields[i, j] != null)
                     {
                         Sugar s = fields[i, j];
                         s.Draw(g, gameTime, new Point(i, j));
                         //g.Draw(whiteRectangle, new Rectangle(30, 30, 10, 10), Color.White);
                     }
-                }
-            }
+
 
             foreach (Agent a in agents)
-            {
                 if (a != null)
-                {
                     a.Draw(g, gameTime, size);
-                }
-            }
+
         }
         public bool AvailableSpace(Point p)
         {
             if (agents[p.X, p.Y] == null)
-            {
                 return true;
-            }
+
             return false;
         }
         public int HarvestSugar(Point p)
@@ -78,36 +72,30 @@ namespace sugarscape
         }
         public void GenerateGrid(int x, int y)
         {
-
-            Random r = new Random();
             worldwidth = x;
             worldlength = y;
-
+            int squareside = 0;
             if (worldwidth < worldlength)
-            {
-                int squareside = screensize.X / worldwidth - 1;
-                squaresize = new Point(squareside);
-            }
+                squareside = screensize.X / worldwidth - 1;
             else
-            {
-                int squareside = screensize.Y / worldlength - 1;
-                squaresize = new Point(squareside);
-            }
+                squareside = screensize.Y / worldlength - 1;
+
+            squaresize = new Point(squareside);
+
             fields = new Sugar[x, y];
             agents = new Agent[x, y];
 
-            for (int i = 0; i < worldwidth; i++)
-            {
+            for (int i = 0; i < worldwidth; i++)            
                 for (int j = 0; j < worldlength; j++)
                 {
                     int smax = r.Next(1, 4);
                     int sstart = r.Next(0, smax);
                     fields[i, j] = new Sugar(smax, sstart);
                 }
-            }
 
-            for (int i = 0; i < worldwidth; i++)
-            {
+            
+            AddAgent(r.Next(5), r.Next(5));
+            /*for (int i = 0; i < worldwidth; i++)
                 for (int j = 0; j < worldlength; j++)
                 {
                     int rando = r.Next(20);
@@ -117,12 +105,14 @@ namespace sugarscape
                         Console.WriteLine("added");
                         AddAgent(i, j);
                     }
-                }
-            }
+                }*/
         }
         public void AddAgent(int x, int y)
         {
             agents[x, y] = new Agent(new Point(x, y));
+            fields[x, y].spawn = true;
+            fields[x, y].Harvest();
+            fields[x, y].max = 4;
         }
         public static World Instance
         {
